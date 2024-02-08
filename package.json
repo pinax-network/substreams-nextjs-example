@@ -1,0 +1,25 @@
+{
+  "name": "substreams-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@substreams/core": "^0.13",
+    "@substreams/node": "^0.6",
+    "next": "^14",
+    "react": "^18",
+    "react-dom": "^18",
+    "swr": "^2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
+  }
+}
