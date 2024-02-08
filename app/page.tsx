@@ -13,7 +13,7 @@ export default function Page() {
 
   const [apiToken, setApiToken] = useState<string>("e201fb26657b610dab0df9b557c7e145057deefafba5aae3");
   const { data } = useSWR("manifest", async () => {
-    const substreamPackage = await fetchSubstream(manifest, {mode: "no-cors", headers: {
+    const substreamPackage = await fetchSubstream(manifest, {mode: "cors", headers: {
       'Access-Control-Allow-Origin': "*"
     }});
     if (!substreamPackage.modules) {
