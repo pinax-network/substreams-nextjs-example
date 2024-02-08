@@ -40,7 +40,7 @@ export default function Page() {
   );
 }
 
-export function SubstreamPackage({substreamPackage, apiToken}: {substreamPackage: ProtoPackage, apiToken: string}) {
+function SubstreamPackage({substreamPackage, apiToken}: {substreamPackage: ProtoPackage, apiToken: string}) {
   const [started, setStart] = useState(false);
   const [session, setSession] = useState<SessionInit>();
   const [messages, setMessages] = useState<EntityChanges[]>([]);
@@ -111,5 +111,3 @@ export function SubstreamPackage({substreamPackage, apiToken}: {substreamPackage
     </>
   )
 }
-
-// x-api-key
