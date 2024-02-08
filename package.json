@@ -11,6 +11,7 @@
   "dependencies": {
     "@substreams/core": "^0.13",
     "@substreams/node": "^0.6",
+    "@substreams/sink-entity-changes": "^0.3.4",
     "next": "^14",
     "react": "^18",
     "react-dom": "^18",

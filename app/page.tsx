@@ -5,6 +5,7 @@ import { fetchSubstream, createRegistry, createRequest } from "@substreams/core"
 import { Package as ProtoPackage, SessionInit } from "@substreams/core/proto";
 import { createWebTransport } from "@substreams/node/createWebTransport";
 import { BlockEmitter } from "@substreams/node";
+import { EntityChanges } from "@substreams/sink-entity-changes/entity_pb";
 
 export default function Page() {
   // User parameters
@@ -38,17 +39,11 @@ export default function Page() {
     </>
   );
 }
-interface Data {
-  chain: string;
-  block: number;
-  traceCalls: string
-};
-
 
 export function Package({substreamPackage, apiToken}: {substreamPackage: ProtoPackage, apiToken: string}) {
   const [started, setStart] = useState(false);
   const [session, setSession] = useState<SessionInit>();
-  const [messages, setMessages] = useState<Data[]>([]);
+  const [messages, setMessages] = useState<EntityChanges[]>([]);
 
   let doc = ''
   let network = substreamPackage.network
@@ -59,8 +54,7 @@ export function Package({substreamPackage, apiToken}: {substreamPackage: ProtoPa
   // const token = process.env.SUBSTREAMS_API_TOKEN;
   const baseUrl = "https://eth.substreams.pinax.network:443";
   const outputModule = "graph_out";
-  const startBlockNum = 17381140;
-  const stopBlockNum = "+5";
+  const startBlockNum = -5;
 
   // Connect Transport
   const headers = new Headers({ "X-User-Agent": "@substreams/node", "x-api-key": apiToken });
@@ -70,7 +64,6 @@ export function Package({substreamPackage, apiToken}: {substreamPackage: ProtoPa
     substreamPackage,
     outputModule,
     startBlockNum,
-    stopBlockNum,
   });
 
   if ( !started ) {
@@ -85,7 +78,7 @@ export function Package({substreamPackage, apiToken}: {substreamPackage: ProtoPa
     // Stream Blocks
     emitter.on("anyMessage", (message: any, cursor, clock) => {
       console.dir(clock);
-      console.dir(message);
+      console.dir(message.entityChanges);
       console.dir(cursor);
       setMessages((prevMessages) => [...prevMessages, message]);
     });
@@ -93,16 +86,28 @@ export function Package({substreamPackage, apiToken}: {substreamPackage: ProtoPa
     emitter.start()
     setStart(true)
   }
-
+  const entities = messages.reduce((prev, current) => {
+    return prev + current.entityChanges.length
+  }, 0);
   return (
     <>
     <h3>{doc}</h3>
     <div><b>Network:</b> {network}</div>
     <div><b>Base URL:</b> {baseUrl}</div>
+    <div><b>Trace ID:</b> {session ? session.traceId.toString() : "Connecting... 🔌"}</div>
     <div><b>Max Workers:</b> {session ? session.maxParallelWorkers.toString() : "Connecting... 🔌"}</div>
     <div><b>Start Block:</b> {session ? session.resolvedStartBlock.toString() : "Connecting... 🔌"}</div>
-    <div><b>Messages:</b> {messages.length ? messages.length : "Loading... ⌛️"}</div>
-    <div>{messages.length ? "<Open Console Log>" : ""}</div>
+    <div><b>Blocks:</b> {messages.length ? messages.length : "Loading... ⌛️"}</div>
+    <div><b>Entities Changes:</b> {messages.length ? entities : "Loading... ⌛️"}</div>
+    <div style={{color: "navy"}}>{messages.length ? "<Open Console Log>" : ""}</div>
+
+
+    <h3>Preview Message</h3>
+    <code>
+      <pre>
+        {messages.length ? JSON.stringify(messages[0], null, 2) : ''}
+      </pre>
+    </code>
     </>
   )
 }
