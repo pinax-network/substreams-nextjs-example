@@ -35,12 +35,12 @@ export default function Page() {
       <br/>
       <div><b>Manifest:</b> {manifest}</div>
       {/* <p>{apiToken}</p> */}
-      {data ? <Package substreamPackage={data} apiToken={apiToken} /> : <><br/>Loading... ⌛️</>}
+      {data ? <SubstreamPackage substreamPackage={data} apiToken={apiToken} /> : <><br/>Loading... ⌛️</>}
     </>
   );
 }
 
-export function Package({substreamPackage, apiToken}: {substreamPackage: ProtoPackage, apiToken: string}) {
+export function SubstreamPackage({substreamPackage, apiToken}: {substreamPackage: ProtoPackage, apiToken: string}) {
   const [started, setStart] = useState(false);
   const [session, setSession] = useState<SessionInit>();
   const [messages, setMessages] = useState<EntityChanges[]>([]);
